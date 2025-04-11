@@ -57,8 +57,8 @@ function CurrentWeather() {
     <Container className="text-white bg-dark p-4 rounded-4 mt-4">
       <Row>
         <Col>
-          <h2 className="mb-4">Current Weather in Rome</h2>
-          <h4 className="m-2">Info</h4>
+          <h2 className="mb-4">Roma</h2>
+          <h5 className="m-2">Info</h5>
           <p className="m-2">
             <strong>
               <i className={weatherIcon}> </i>
