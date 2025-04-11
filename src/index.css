@@ -1,0 +1,71 @@
+.custom-font-size {
+  font-size: 130px;
+}
+
+/* DROP DOWN MENU */
+.custom-dropdown .dropdown-menu {
+  background-color: #343a40;
+}
+
+.custom-dropdown .dropdown-item {
+  color: #ffffff;
+}
+
+.custom-dropdown .dropdown-item:hover {
+  background-color: #495057;
+  color: #ffffff;
+}
+
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.37);
+}
+
+#card1 {
+  animation-duration: 1s;
+  animation-name: opening;
+}
+#card2 {
+  animation-duration: 1s;
+  animation-name: opening;
+  animation-delay: 350ms;
+}
+#card3 {
+  animation-duration: 1s;
+  animation-name: opening;
+  animation-delay: 750ms;
+}
+#card4 {
+  animation-duration: 1s;
+  animation-name: opening;
+  animation-delay: 950ms;
+}
+
+@keyframes opening {
+  0% {
+    scale: 1;
+    box-shadow: 0px 0px 20px 7px;
+    color: rgba(255, 255, 255, 0.13);
+  }
+  25% {
+    scale: 1.1;
+    box-shadow: 0px 0px 20px 7px;
+    color: rgba(255, 255, 255, 0.13);
+  }
+
+  50% {
+    scale: 1.2;
+    box-shadow: 0px 0px 20px 7px;
+    color: rgba(255, 255, 255, 0.13);
+  }
+  75% {
+    scale: 1.1;
+  }
+  100% {
+    scale: 1;
+  }
+}
