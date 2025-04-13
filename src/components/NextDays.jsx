@@ -1,15 +1,14 @@
 import { Container, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
-
-const API =
-  "https://api.openweathermap.org/data/2.5/forecast?q=Roma&appid=d5d556221e3d4c6bb1a764a8e38666c7";
 
 function NextDays() {
   const { cityName } = useParams();
+  const city = cityName || "Roma";
+
   const [forecast, setForecast] = useState([]);
-  const [city, setCity] = useState("");
+  const [cityDisplayName, setCityDisplayName] = useState("");
   const [weather, setWeather] = useState({
     main: "",
     description: "",
@@ -19,19 +18,21 @@ function NextDays() {
   });
 
   const iconMap = {
-    "01d": "bi-sun", // Sole
-    "01n": "bi-moon", // Luna
-    "02d": "bi-cloud-sun", // Nuvole sparse (giorno)
-    "02n": "bi-cloud-moon", // Nuvole sparse (notte)
-    "03d": "bi-cloud", // Nuvole
-    "09d": "bi-cloud-rain", // Pioggia
-    "10d": "bi-cloud-drizzle", // Pioggia leggera
-    "11d": "bi-cloud-lightning", // Tempesta
-    "13d": "bi-snow", // Neve
-    "50d": "bi-cloud-fog", // Nebbia
+    "01d": "bi-sun",
+    "01n": "bi-moon",
+    "02d": "bi-cloud-sun",
+    "02n": "bi-cloud-moon",
+    "03d": "bi-cloud",
+    "09d": "bi-cloud-rain",
+    "10d": "bi-cloud-drizzle",
+    "11d": "bi-cloud-lightning",
+    "13d": "bi-snow",
+    "50d": "bi-cloud-fog",
   };
 
   useEffect(() => {
+    const API = `https://api.openweathermap.org/data/2.5/forecast?q=${city},it&units=metric&appid=d5d556221e3d4c6bb1a764a8e38666c7`;
+
     fetch(API)
       .then((response) => {
         if (response.ok) {
@@ -44,7 +45,7 @@ function NextDays() {
         console.log("DATA NEXT DAYS", data);
         const dailyForecast = {};
 
-        setCity(data.city.name);
+        setCityDisplayName(data.city.name);
 
         data.list.forEach((item) => {
           const date = item.dt_txt.split(" ")[0];
@@ -58,9 +59,8 @@ function NextDays() {
         const finalForecast = Object.values(dailyForecast).slice(0, 4);
         setForecast(finalForecast);
       });
-  }, []);
+  }, [city]);
 
-  //   DEFAULT ICON
   const weatherIcon = iconMap[weather.icon] || "bi-cloud";
 
   return (
@@ -77,11 +77,11 @@ function NextDays() {
               className="mb-4 d-flex justify-content-center"
             >
               <Link
-                to={`/city/${cityName}/${day.dt_txt.split(" ")[0]}`} // Aggiungi la data (o un altro identificativo)
+                to={`/city/${city}/${day.dt_txt.split(" ")[0]}`}
                 className="text-decoration-none"
               >
                 <div
-                  id={`card${index + 1}`} // Assegna un ID dinamico come card1, card2, card3, ecc.
+                  id={`card${index + 1}`}
                   className="text-white border border-1 rounded-3 text-center p-3 w-100 h-100 card-hover"
                 >
                   <h5>
@@ -96,7 +96,7 @@ function NextDays() {
                   <p>
                     {day.weather[0].main} - {day.weather[0].description}
                   </p>
-                  <p>Temp: {Math.round(day.main.temp - 273.15)}°C</p>
+                  <p>Temp: {Math.round(day.main.temp)}°C</p>
                   <img
                     src={`http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`}
                     alt="icon"

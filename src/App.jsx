@@ -23,6 +23,15 @@ function App() {
             }
           />
           <Route path="/city/:cityName/:date" element={<WeatherDetails />} />
+          <Route
+            path="/city/:cityName"
+            element={
+              <>
+                <CurrentWeather />
+                <NextDays />
+              </>
+            }
+          />
         </Routes>
       </>
     </BrowserRouter>

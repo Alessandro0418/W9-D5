@@ -1,11 +1,14 @@
 import { Container, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const API =
-  "https://api.openweathermap.org/data/2.5/weather?q=Roma&appid=d5d556221e3d4c6bb1a764a8e38666c7";
-
 function CurrentWeather() {
+  const { cityName } = useParams();
+  const city = cityName || "Roma";
+
+  const API = `https://api.openweathermap.org/data/2.5/weather?q=${city},it&units=metric&appid=d5d556221e3d4c6bb1a764a8e38666c7`;
+
   const [weather, setWeather] = useState({
     main: "",
     description: "",
@@ -57,7 +60,7 @@ function CurrentWeather() {
     <Container className="text-white bg-dark p-4 rounded-4 mt-4">
       <Row>
         <Col>
-          <h2 className="mb-4">Roma</h2>
+          <h2 className="mb-4">{city}</h2>
           <h5 className="m-2">Info</h5>
           <p className="m-2">
             <strong>
@@ -78,7 +81,7 @@ function CurrentWeather() {
             {weather.temp}°C
           </p>
           <p className="m-2">
-            <strong></strong>
+            <i class="bi bi-droplet"> </i>
             {weather.humidity}%
           </p>
         </Col>

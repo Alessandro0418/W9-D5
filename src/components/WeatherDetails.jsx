@@ -1,76 +1,60 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { Spinner } from "react-bootstrap";
-import { Container, Row, Col } from "react-bootstrap";
+import { useState, useEffect } from "react";
 
-const WeatherDetails = () => {
+function WeatherDetails() {
   const { cityName, date } = useParams();
-  const [cityData, setCityData] = useState(null);
-  const [error, setError] = useState(null);
+
+  const [weatherDetails, setWeatherDetails] = useState(null);
 
   useEffect(() => {
-    if (!cityName) return;
+    if (!cityName || !date) return;
 
-    const API = `https://api.openweathermap.org/data/2.5/weather?q=Roma&appid=d5d556221e3d4c6bb1a764a8e38666c7`;
+    const API = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName},it&units=metric&appid=d5d556221e3d4c6bb1a764a8e38666c7`;
 
     fetch(API)
       .then((response) => {
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error("Errore nella fetch dei dati meteo");
+          throw new Error("Errore nel recupero dei dati");
         }
       })
       .then((data) => {
-        if (data.cod === 200) {
-          setCityData(data);
-        } else {
-          throw new Error("Città non trovata");
-        }
+        const dayForecast = data.list.find(
+          (item) => item.dt_txt.split(" ")[0] === date
+        );
+        setWeatherDetails(dayForecast);
       })
-      .catch((err) => {
-        console.error("Errore:", err);
-        setError(err.message);
+      .catch((error) => {
+        console.error("Error fetching weather details:", error);
       });
-  }, [cityName]);
-
-  if (error) {
-    return (
-      <div className="text-center text-white bg-dark p-5">
-        <h3>{error}</h3>
-        <p>Controlla il nome della città o riprova più tardi.</p>
-      </div>
-    );
-  }
-
-  if (!cityData && cityName) {
-    return (
-      <div className="text-center bg-dark p-5">
-        <Spinner animation="border" variant="primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      </div>
-    );
-  }
+  }, [cityName, date]);
 
   return (
-    <Container className="text-white bg-dark p-4 rounded-4 mt-4">
-      <Row>
-        <Col>
-          <div className="text-white bg-dark p-4">
-            <h2>
-              {cityData.name} - {cityData.sys.country}
-            </h2>
-            <h3>{cityData.weather[0].main}</h3>
-            <p>{cityData.weather[0].description}</p>
-            <p>Temperature: {Math.round(cityData.main.temp - 273.15)}°C</p>
-            <p>Humidity: {cityData.main.humidity}%</p>
-            <p>Wind: {cityData.wind.speed} m/s</p>
-          </div>
-        </Col>
-      </Row>
-    </Container>
+    <div className="text-white bg-dark p-4 rounded-4 mt-4 ms-4 me-4">
+      {weatherDetails ? (
+        <div>
+          <h1>
+            {cityName} - {new Date(weatherDetails.dt_txt).toLocaleDateString()}
+          </h1>
+          <p>
+            <i class="bi bi-cloud"></i> {weatherDetails.weather[0].description}
+          </p>
+          <p>
+            {" "}
+            <i class="bi bi-thermometer-sun"> </i> Temp:{" "}
+            {Math.round(weatherDetails.main.temp)}°C
+          </p>
+          <img
+            src={`http://openweathermap.org/img/wn/${weatherDetails.weather[0].icon}@2x.png`}
+            alt="weather icon"
+          />
+        </div>
+      ) : (
+        <p>Caricamento dettagli...</p>
+      )}
+    </div>
   );
-};
+}
 
 export default WeatherDetails;
