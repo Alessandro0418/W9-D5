@@ -57,10 +57,12 @@ function CurrentWeather() {
   const weatherIcon = iconMap[weather.icon] || "bi-cloud";
 
   return (
-    <Container className="text-white bg-dark p-4 rounded-4 mt-4">
+    <Container className="text-white bg-dark p-4 mt-4 rounded-3">
       <Row>
         <Col>
-          <h2 className="mb-4">{city}</h2>
+          <h2 className="mb-4">
+            <i class="bi bi-geo-alt-fill fs-3"></i> {city}
+          </h2>
           <h5 className="m-2">Info</h5>
           <p className="m-2">
             <strong>

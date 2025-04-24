@@ -6,34 +6,49 @@ import CurrentWeather from "./components/CurrentWeather";
 import NextDays from "./components/NextDays";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import WeatherDetails from "./components/WeatherDetails";
+import IntroAnimation from "./components/IntroAnimation";
+import { Container } from "react-bootstrap";
+import { useState } from "react";
 
 function App() {
+  const [isIntroVisible, setIsIntroVisible] = useState(true);
   return (
     <BrowserRouter>
-      <>
-        <MyNavbar />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <CurrentWeather />
-                <NextDays />
-              </>
-            }
-          />
-          <Route path="/city/:cityName/:date" element={<WeatherDetails />} />
-          <Route
-            path="/city/:cityName"
-            element={
-              <>
-                <CurrentWeather />
-                <NextDays />
-              </>
-            }
-          />
-        </Routes>
-      </>
+      <Container fluid className="p-0">
+        {isIntroVisible ? (
+          <div className="intro-overlay">
+            <IntroAnimation onFinish={() => setIsIntroVisible(false)} />
+          </div>
+        ) : (
+          <>
+            <MyNavbar />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <>
+                    <CurrentWeather />
+                    <NextDays />
+                  </>
+                }
+              />
+              <Route
+                path="/city/:cityName/:date"
+                element={<WeatherDetails />}
+              />
+              <Route
+                path="/city/:cityName"
+                element={
+                  <>
+                    <CurrentWeather />
+                    <NextDays />
+                  </>
+                }
+              />
+            </Routes>
+          </>
+        )}
+      </Container>
     </BrowserRouter>
   );
 }
