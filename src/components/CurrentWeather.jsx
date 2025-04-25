@@ -7,7 +7,10 @@ function CurrentWeather() {
   const { cityName } = useParams();
   const city = cityName || "Roma";
 
+  const [cityImage, setCityImage] = useState("");
+
   const API = `https://api.openweathermap.org/data/2.5/weather?q=${city},it&units=metric&appid=d5d556221e3d4c6bb1a764a8e38666c7`;
+  const API2 = `https://api.pexels.com/v1/search?query=${city}&per_page=1`;
 
   const [weather, setWeather] = useState({
     main: "",
@@ -40,61 +43,106 @@ function CurrentWeather() {
         }
       })
       .then((data) => {
-        console.log("DATA", data);
         setWeather({
           main: data.weather[0].main,
           description: data.weather[0].description,
           temp: data.main.temp,
           humidity: data.main.humidity,
         });
+      });
+
+    fetch(API2, {
+      headers: {
+        Authorization:
+          "8yKxtAVFzxdveGMUuHPwFugOYCHjZSXKrx97zCZ6DXtPsOcZ1xcM0k7k",
+      },
+    })
+      .then((res) => res.json())
+      .then((pexelsData) => {
+        if (pexelsData.photos && pexelsData.photos.length > 0) {
+          setCityImage(pexelsData.photos[0].src.large);
+        }
       })
       .catch((err) => {
         console.log("ERRORE DURANTE IL FETCH DEI DATI:", err);
       });
-  }, []);
+  }, [city]);
 
-  //   DEFAULT ICON
   const weatherIcon = iconMap[weather.icon] || "bi-cloud";
 
   return (
-    <Container className="text-white bg-dark p-4 mt-4 rounded-3">
-      <Row>
-        <Col>
-          <h2 className="mb-4">
-            <i class="bi bi-geo-alt-fill fs-3"></i> {city}
-          </h2>
-          <h5 className="m-2">Info</h5>
-          <p className="m-2">
-            <strong>
-              <i className={weatherIcon}> </i>
-            </strong>
-            {weather.main}
-          </p>
-          <p className="m-2">
-            <strong>
-              <i className={weatherIcon}> </i>
-            </strong>
-            {weather.description}
-          </p>
-          <p className="m-2">
-            <strong>
-              <i class="bi bi-thermometer-sun"> </i>
-            </strong>{" "}
-            {weather.temp}°C
-          </p>
-          <p className="m-2">
-            <i class="bi bi-droplet"> </i>
-            {weather.humidity}%
-          </p>
-        </Col>
+    <Container
+      className="text-white p-4 mt-4 rounded-3 position-relative"
+      style={{
+        backgroundImage: `url(${cityImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        overflow: "hidden",
+      }}
+    >
+      {/* Overlay scuro globale */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.6)",
+          zIndex: 1,
+        }}
+      ></div>
 
-        {/* ICONA DINAMICA, CAMBIA A SECONDA DEL WEATHER CORRENTE */}
-        <Col className="custom-font-size ms-5">
-          <p>
-            <i className={weatherIcon}></i>
-          </p>
-        </Col>
-      </Row>
+      {/* Effetto sfumato a sinistra */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "40%",
+          height: "100%",
+          background:
+            "linear-gradient(to right, rgba(0, 0, 0, 0.8), transparent)",
+          zIndex: 2,
+        }}
+      ></div>
+
+      <div style={{ position: "relative", zIndex: 3 }}>
+        <Row>
+          <Col>
+            <h2 className="mb-4">
+              <i className="bi bi-geo-alt-fill fs-3"></i> {city}
+            </h2>
+            <h5 className="m-2">Info</h5>
+            <p className="m-2">
+              <strong>
+                <i className={weatherIcon}> </i>
+              </strong>
+              {weather.main}
+            </p>
+            <p className="m-2">
+              <strong>
+                <i className={weatherIcon}> </i>
+              </strong>
+              {weather.description}
+            </p>
+            <p className="m-2">
+              <strong>
+                <i className="bi bi-thermometer-sun"> </i>
+              </strong>{" "}
+              {weather.temp}°C
+            </p>
+            <p className="m-2">
+              <i className="bi bi-droplet"> </i>
+              {weather.humidity}%
+            </p>
+          </Col>
+
+          <Col className="custom-font-size ms-5">
+            <p>
+              <i className={weatherIcon}></i>
+            </p>
+          </Col>
+        </Row>
+      </div>
     </Container>
   );
 }

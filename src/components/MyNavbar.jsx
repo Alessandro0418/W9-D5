@@ -21,12 +21,7 @@ function MyNavbar() {
     <Navbar expand="lg" className="navbar-dark bg-black">
       <Container>
         <Navbar.Brand as={Link} to="/" className="fs-4">
-          Weather App
-          {/* <img
-            src="/public/img/WeatherAppLogo2.png"
-            className=""
-            alt="WeatherApp-Logo"
-          /> */}
+          <i class="bi bi-cloud-sun-fill"></i> Weather App
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
