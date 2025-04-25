@@ -22,7 +22,7 @@ function IntroAnimation({ onFinish }) {
     <div className="intro-animation d-flex align-items-center justify-content-center flex-column mt-custom ms-2 mt-5">
       <img
         className="popup-animation w-custom"
-        src="/public/WeatherAppLogo2.png"
+        src="/WeatherAppLogo2.png"
         alt="logo"
       />
       <ProgressBar
